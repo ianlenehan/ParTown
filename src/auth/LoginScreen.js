@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { Text, View } from "react-native";
-import { auth, firestore } from "react-native-firebase";
-import Firebase from "firebase";
+import React, { useState } from 'react';
+import { Text, View, KeyboardAvoidingView, Image } from 'react-native';
+import { auth, firestore } from 'react-native-firebase';
+
 import {
   Container,
   Card,
@@ -11,16 +11,16 @@ import {
   Button,
   Spacer,
   Colors
-} from "../common";
-import { TouchableOpacity } from "react-native-gesture-handler";
+} from '../common';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 function LoginScreen() {
   const initialUserValues = {
-    fullName: "",
-    nickName: "",
-    emailAddress: "",
-    password: "",
-    passwordConfirmation: ""
+    fullName: '',
+    nickName: '',
+    emailAddress: '',
+    password: '',
+    passwordConfirmation: ''
   };
   const [userValues, setUserValues] = useState(initialUserValues);
   const {
@@ -31,7 +31,7 @@ function LoginScreen() {
     passwordConfirmation
   } = userValues;
 
-  const [authType, setAuthType] = useState("login");
+  const [authType, setAuthType] = useState('login');
   const [loading, setLoading] = useState(false);
   const [validationError, setValidationError] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -50,7 +50,7 @@ function LoginScreen() {
 
   const handleLogin = async () => {
     if (!validateEmail(emailAddress)) {
-      return setErrorMessage("FORE! Email address is invalid!");
+      return setErrorMessage('FORE! Email address is invalid!');
     }
     try {
       setLoading(true);
@@ -58,29 +58,29 @@ function LoginScreen() {
       setLoading(false);
     } catch (error) {
       setErrorMessage(
-        "FORE! The email address or password you entered is incorrect."
+        'FORE! The email address or password you entered is incorrect.'
       );
       setLoading(false);
     }
   };
 
   const runValidations = () => {
-    if (!fullName || fullName === "") {
-      setErrorMessage("FORE! Name can not be blank.");
+    if (!fullName || fullName === '') {
+      setErrorMessage('FORE! Name can not be blank.');
       return false;
     }
-    if (!nickName || nickName === "") {
-      const nn = fullName.split(" ")[0];
+    if (!nickName || nickName === '') {
+      const nn = fullName.split(' ')[0];
       setUserValues(userValues => ({ ...userValues, nickName: nn }));
     }
     if (password !== passwordConfirmation) {
       setErrorMessage(
-        "FORE! Password and Password Confirmation must be the same."
+        'FORE! Password and Password Confirmation must be the same.'
       );
       return false;
     }
     if (!validateEmail(emailAddress)) {
-      setErrorMessage("FORE! Email address is invalid!");
+      setErrorMessage('FORE! Email address is invalid!');
       return false;
     }
     return true;
@@ -97,7 +97,7 @@ function LoginScreen() {
         );
 
         await firestore()
-          .collection("users")
+          .collection('users')
           .doc(authUser.user.uid)
           .set({
             fullName,
@@ -109,7 +109,7 @@ function LoginScreen() {
         setLoading(false);
       } catch (error) {
         setErrorMessage(
-          "FORE! There was an error signing you up! Please try again."
+          'FORE! There was an error signing you up! Please try again.'
         );
         console.error(error);
         setLoading(false);
@@ -124,28 +124,25 @@ function LoginScreen() {
 
   return (
     <Container solid>
-      <Spacer size={6} />
-      <H1 white style={{ textAlign: "center" }}>
-        Par Town!
-      </H1>
-      <Spacer size={3} />
-      <Card flex={1} clear>
-        {authType === "signup" && (
+      <Spacer size={2} />
+
+      <Card flex={2} clear>
+        {authType === 'signup' && (
           <React.Fragment>
             <Input
               white
-              label={"Full name"}
+              label={'Full name'}
               placeholder="Jack Nicklaus"
-              onChange={e => handleChange(e, "fullName")}
+              onChange={e => handleChange(e, 'fullName')}
               value={fullName}
               error={validationError}
             />
             <Spacer size={2} />
             <Input
               white
-              label={"Nickname"}
+              label={'Nickname'}
               placeholder="Golden Bear"
-              onChange={e => handleChange(e, "nickName")}
+              onChange={e => handleChange(e, 'nickName')}
               value={nickName}
               error={validationError}
             />
@@ -154,9 +151,9 @@ function LoginScreen() {
         )}
         <Input
           white
-          label={"Email Address"}
+          label={'Email Address'}
           placeholder="fore@example.com"
-          onChange={e => handleChange(e, "emailAddress")}
+          onChange={e => handleChange(e, 'emailAddress')}
           value={emailAddress}
           error={validationError}
         />
@@ -164,32 +161,32 @@ function LoginScreen() {
         <Input
           white
           secureTextEntry
-          label={"Password"}
+          label={'Password'}
           placeholder="s0m3thingS3cur3!"
-          onChange={e => handleChange(e, "password")}
+          onChange={e => handleChange(e, 'password')}
           value={password}
         />
         <Spacer size={2} />
-        {authType === "signup" ? (
+        {authType === 'signup' ? (
           <React.Fragment>
             <Input
               white
               secureTextEntry
-              label={"Password Confirmation"}
+              label={'Password Confirmation'}
               placeholder="Same as the password..."
-              onChange={e => handleChange(e, "passwordConfirmation")}
+              onChange={e => handleChange(e, 'passwordConfirmation')}
               value={passwordConfirmation}
             />
             <Spacer size={2} />
-            <TouchableOpacity onPress={() => changeAuthType("login")}>
-              <Body white style={{ textAlign: "center" }}>
+            <TouchableOpacity onPress={() => changeAuthType('login')}>
+              <Body white style={{ textAlign: 'center' }}>
                 Already have an account? Click here to login.
               </Body>
             </TouchableOpacity>
           </React.Fragment>
         ) : (
-          <TouchableOpacity onPress={() => changeAuthType("signup")}>
-            <Body white style={{ textAlign: "center" }}>
+          <TouchableOpacity onPress={() => changeAuthType('signup')}>
+            <Body white style={{ textAlign: 'center' }}>
               No Account? Click here to create one.
             </Body>
           </TouchableOpacity>
@@ -201,16 +198,13 @@ function LoginScreen() {
               padding: 5,
               borderRadius: 5,
               marginTop: 10
-            }}
-          >
-            <Text style={{ color: "red", textAlign: "center" }}>
+            }}>
+            <Text style={{ color: 'red', textAlign: 'center' }}>
               {errorMessage}
             </Text>
           </View>
         )}
-      </Card>
-      <Card clear>
-        {authType === "signup" ? (
+        {authType === 'signup' ? (
           <Button loading={loading} onPress={handleSignup}>
             SIGN UP
           </Button>
@@ -220,6 +214,13 @@ function LoginScreen() {
           </Button>
         )}
       </Card>
+      <Spacer size={3} />
+      <View style={{ display: 'flex', alignItems: 'center', marginBottom: 50 }}>
+        <Image
+          source={require('../images/ParTownLogoWhite.png')}
+          style={{ width: 125, height: 50 }}
+        />
+      </View>
     </Container>
   );
 }

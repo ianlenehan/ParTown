@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, View, ScrollView } from "react-native";
-import { Icon } from "react-native-elements";
-import { firestore } from "react-native-firebase";
-import moment from "moment";
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, ScrollView } from 'react-native';
+import { Icon } from 'react-native-elements';
+import { firestore } from 'react-native-firebase';
+import moment from 'moment';
 import {
   H1,
   H3,
   Body,
   Button,
   Card,
-  Container,
+  ScrollContainer,
   Spacer,
   HR,
   Emoji,
   Loading
-} from "../common";
-import { golfGreen } from "../constants/Colours";
-import useAppContext from "../hooks/useAppContext";
+} from '../common';
+import { golfGreen } from '../constants/Colours';
+import useAppContext from '../hooks/useAppContext';
 import {
   TouchableWithoutFeedback,
   TouchableOpacity
-} from "react-native-gesture-handler";
+} from 'react-native-gesture-handler';
 
 const DashboardScreen = ({ navigation }) => {
   const { navigate } = navigation;
@@ -35,8 +35,8 @@ const DashboardScreen = ({ navigation }) => {
 
   const fetchTournaments = async () => {
     const db = firestore();
-    let tournamentsRef = db.collection("tournament_player");
-    const query = tournamentsRef.where("userId", "==", currentUser.id);
+    let tournamentsRef = db.collection('tournament_player');
+    const query = tournamentsRef.where('userId', '==', currentUser.id);
 
     try {
       setLoading(true);
@@ -45,7 +45,7 @@ const DashboardScreen = ({ navigation }) => {
 
       for (let i = 0; i < querySnap.docs.length; i++) {
         let tournament = await db
-          .collection("tournaments")
+          .collection('tournaments')
           .doc(querySnap.docs[i].data().tournamentId)
           .get();
         fetchedTournaments.push({ ...tournament.data(), id: tournament.id });
@@ -53,7 +53,7 @@ const DashboardScreen = ({ navigation }) => {
       setTournaments(fetchedTournaments);
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching tournaments", error);
+      console.error('Error fetching tournaments', error);
     }
   };
 
@@ -62,30 +62,13 @@ const DashboardScreen = ({ navigation }) => {
       .map(playerId => {
         return players[playerId].nickName;
       })
-      .join(", ");
+      .join(', ');
   };
   return (
-    <Container>
-      <View
-        style={{
-          backgroundColor: golfGreen,
-          height: 125,
-          position: "absolute",
-          top: 0,
-          right: 0,
-          left: 0,
-          zIndex: 1
-        }}
-      />
-      <Card flex={2}>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center"
-          }}
-        >
+    <ScrollContainer>
+      <View style={styles.headerClip} />
+      <Card>
+        <View style={styles.userCard}>
           <View>
             <H1 green>{currentUser.nickName.toUpperCase()}</H1>
             <Body>{currentUser.fullName}</Body>
@@ -102,20 +85,20 @@ const DashboardScreen = ({ navigation }) => {
                 moment(currentUser.lastRoundDate.toDate())
                   .local()
                   .from(moment())) ||
-                "N/A"}
+                'N/A'}
             </Body>
           </View>
           <View style={styles.stat}>
             <Body bold>Last Round Score</Body>
-            <Body>{currentUser.lastRoundScore || "N/A"}</Body>
+            <Body>{currentUser.lastRoundScore || 'N/A'}</Body>
           </View>
           <View style={styles.stat}>
             <Body bold>Highest Score</Body>
-            <Body>{currentUser.highestScore || "N/A"}</Body>
+            <Body>{currentUser.highestScore || 'N/A'}</Body>
           </View>
           <View style={styles.stat}>
             <Body bold>Lowest Score</Body>
-            <Body>{currentUser.lowestScore || "N/A"}</Body>
+            <Body>{currentUser.lowestScore || 'N/A'}</Body>
           </View>
         </View>
       </Card>
@@ -135,19 +118,18 @@ const DashboardScreen = ({ navigation }) => {
                 <TouchableOpacity
                   key={tournament.id}
                   style={styles.tournament}
-                  onPress={() => navigate("TournamentDash", { tournament })}
-                >
+                  onPress={() => navigate('TournamentDash', { tournament })}>
                   <H3 white underline>
                     {tournament.title.toUpperCase()}
                   </H3>
                   <Body white>{getPlayers(tournament.players)}</Body>
                   <Body white>
-                    Last Competition:{" "}
+                    Last Competition:{' '}
                     {(tournament.lastRoundDate &&
                       moment(tournament.lastRoundDate.toDate())
                         .local()
                         .from(moment())) ||
-                      "N/A"}
+                      'N/A'}
                   </Body>
                 </TouchableOpacity>
               );
@@ -157,22 +139,20 @@ const DashboardScreen = ({ navigation }) => {
         <Button
           white
           onPress={() =>
-            navigate("NewTournament", { refetch: fetchTournaments })
-          }
-        >
+            navigate('NewTournament', { refetch: fetchTournaments })
+          }>
           NEW TOURNAMENT
         </Button>
 
         <Button
           white
           onPress={() =>
-            navigate("FindTournament", { refetch: fetchTournaments })
-          }
-        >
+            navigate('FindTournament', { refetch: fetchTournaments })
+          }>
           JOIN TOURNAMENT
         </Button>
       </Card>
-    </Container>
+    </ScrollContainer>
   );
 };
 
@@ -181,13 +161,29 @@ const styles = StyleSheet.create({
     marginTop: 30
   },
   stat: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: 5
   },
+  headerClip: {
+    backgroundColor: golfGreen,
+    height: 125,
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    left: 0,
+    zIndex: 1,
+    margin: -10
+  },
+  userCard: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
   tournament: {
-    width: "100%",
+    width: '100%',
     backgroundColor: golfGreen,
     padding: 10,
     borderRadius: 5,
@@ -202,11 +198,10 @@ DashboardScreen.navigationOptions = ({ navigation }) => {
     headerRight: (
       <TouchableWithoutFeedback
         onPress={() =>
-          navigation.navigate("Settings", {
+          navigation.navigate('Settings', {
             refetch: navigation.state.params.fetchTournaments
           })
-        }
-      >
+        }>
         <Icon
           name="settings"
           color="white"

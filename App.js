@@ -1,11 +1,11 @@
-import React, {Fragment, Component} from 'react';
-import {SafeAreaView, StatusBar} from 'react-native';
+import React, { Component } from 'react';
+import { StatusBar } from 'react-native';
 import firebase from 'react-native-firebase';
-import {createAppContainer} from 'react-navigation';
+import { createAppContainer } from 'react-navigation';
 import RootNavigator from './src/navigation/RootNavigator';
 import LoginScreen from './src/auth/LoginScreen';
 import AppContext from './src/utils/AppContext';
-import {Loading} from './src/common';
+import { Loading } from './src/common';
 
 const MainApp = createAppContainer(RootNavigator);
 
@@ -24,18 +24,18 @@ class App extends Component {
         roundScores: null,
         refetch: () => {},
         filterDates: {
-          from: new Date(new Date().getFullYear(), 7, 1),
-          to: new Date(new Date().getFullYear(), 7, 30),
+          from: new Date(new Date().getFullYear(), 0, 1),
+          to: new Date(new Date().getFullYear(), 11, 31)
         },
         setAppState: async (key, value) => {
           await this.setState({
             appState: {
               ...this.state.appState,
-              [key]: value,
-            },
+              [key]: value
+            }
           });
-        },
-      },
+        }
+      }
     };
   }
 
@@ -47,7 +47,7 @@ class App extends Component {
       let appState = {
         ...this.state.appState,
         authUser: null,
-        currentUser: null,
+        currentUser: null
       };
       if (authUser) {
         const currentUserSnap = await firebase
@@ -59,20 +59,18 @@ class App extends Component {
         appState = {
           ...this.state.appState,
           authUser,
-          currentUser: {id: currentUserSnap.id, ...currentUserSnap.data()},
+          currentUser: { id: currentUserSnap.id, ...currentUserSnap.data() }
         };
       }
       return this.setState({
         appState,
-        loading: false,
+        loading: false
       });
     });
   }
 
   componentWillUnmount() {
-    if (this.unsubscriber) {
-      this.unsubscriber();
-    }
+    if (this.unsubscriber) this.unsubscriber();
   }
 
   render() {
@@ -85,6 +83,7 @@ class App extends Component {
 
     return (
       <AppContext.Provider value={this.state.appState}>
+        <StatusBar barStyle="light-content" />
         <MainApp />
       </AppContext.Provider>
     );

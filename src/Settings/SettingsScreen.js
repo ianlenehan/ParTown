@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from "react";
-import { auth, firestore } from "react-native-firebase";
-import useAppContext from "../hooks/useAppContext";
-import { View, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from 'react';
+import { auth, firestore } from 'react-native-firebase';
+import useAppContext from '../hooks/useAppContext';
+import { View, TouchableOpacity } from 'react-native';
 import {
   H1,
   H3,
   Body,
   Button,
   Card,
-  Container,
+  ScrollContainer,
   Spacer,
   Input,
   Emoji
-} from "../common";
+} from '../common';
 
 function SettingsScreen({ navigation }) {
   const { currentUser, emoji, setAppState } = useAppContext();
   const [loading, setLoading] = useState(false);
   const [userDetails, setUserDetails] = useState({
-    fullName: currentUser && currentUser.fullName && "",
-    nickName: currentUser && currentUser.nickName && "",
-    emoji: currentUser && currentUser.emoji && "⛳️"
+    fullName: currentUser && currentUser.fullName && '',
+    nickName: currentUser && currentUser.nickName && '',
+    emoji: currentUser && currentUser.emoji && '⛳️'
   });
 
   useEffect(() => {
@@ -34,10 +34,10 @@ function SettingsScreen({ navigation }) {
 
   updatePlayerSettings = async () => {
     setLoading(true);
-    setAppState("currentUser", userDetails);
+    setAppState('currentUser', userDetails);
     try {
       await firestore()
-        .collection("users")
+        .collection('users')
         .doc(currentUser.id)
         .set(userDetails);
       setLoading(false);
@@ -53,13 +53,13 @@ function SettingsScreen({ navigation }) {
     const db = firestore();
 
     const tpSnap = await db
-      .collection("tournament_player")
-      .where("userId", "==", userDetails.id)
+      .collection('tournament_player')
+      .where('userId', '==', userDetails.id)
       .get();
 
     for (let i = 0; i < tpSnap.docs.length; i++) {
       await db
-        .collection("tournaments")
+        .collection('tournaments')
         .doc(tpSnap.docs[i].data().tournamentId)
         .update({ [`players.${userDetails.id}`]: userDetails });
     }
@@ -83,7 +83,7 @@ function SettingsScreen({ navigation }) {
   };
 
   return (
-    <Container>
+    <ScrollContainer>
       <Card flex={1}>
         <H1>Settings</H1>
         <Spacer size={3} />
@@ -98,11 +98,11 @@ function SettingsScreen({ navigation }) {
           value={userDetails.nickName}
           onChangeText={handleNicknameChange}
         />
-        <TouchableOpacity onPress={() => navigation.navigate("EmojiPicker")}>
-          <Emoji symbol={userDetails.emoji || "⛳️"} size="large" />
+        <TouchableOpacity onPress={() => navigation.navigate('EmojiPicker')}>
+          <Emoji symbol={userDetails.emoji || '⛳️'} size="large" />
           <Body>Choose your emoji</Body>
         </TouchableOpacity>
-        <View style={{ justifyContent: "flex-end", flex: 1 }}>
+        <View style={{ justifyContent: 'flex-end', flex: 1 }}>
           <Button onPress={updatePlayerSettings} loading={loading}>
             SAVE CHANGES
           </Button>
@@ -111,7 +111,7 @@ function SettingsScreen({ navigation }) {
       <Button warning onPress={handleSignOut}>
         SIGN OUT
       </Button>
-    </Container>
+    </ScrollContainer>
   );
 }
 

@@ -1,15 +1,15 @@
-import React, { useState, useContext } from "react";
-import { View, StyleSheet, Text, Clipboard, Alert } from "react-native";
-import { firestore } from "react-native-firebase";
-import { Button, Container, Card, H1, Input, Spacer } from "../common";
-import { greenMineral, greySolitude } from "../constants/Colours";
-import AppContext from "../utils/AppContext";
+import React, { useState, useContext } from 'react';
+import { View, StyleSheet, Text, Clipboard, Alert } from 'react-native';
+import { firestore } from 'react-native-firebase';
+import { Button, Container, Card, H1, Input, Spacer } from '../common';
+import { greenMineral, greySolitude } from '../constants/Colours';
+import AppContext from '../utils/AppContext';
 
 function NewTournamentScreen({ navigation }) {
   const [details, setDetails] = useState({
-    title: "",
-    winningReward: "Trophy",
-    losingReward: "Red Flag"
+    title: '',
+    winningReward: 'Trophy',
+    losingReward: 'Red Flag'
   });
   const [loading, setLoading] = useState(false);
   const { currentUser } = useContext(AppContext);
@@ -20,9 +20,9 @@ function NewTournamentScreen({ navigation }) {
 
   const showClipboardAlert = id => {
     return Alert.alert(
-      "Invite Token",
+      'Invite Token',
       `An invite token (${id}) has been copied to your clipboard! Paste this into a message or email to your friends and they can use it to join your new tournament.`,
-      [{ text: "OK", onPress: () => navigation.goBack() }]
+      [{ text: 'OK', onPress: () => navigation.goBack() }]
     );
   };
 
@@ -36,10 +36,10 @@ function NewTournamentScreen({ navigation }) {
         players: { [currentUser.id]: { ...currentUser, admin: true } }
       };
       const tournamentRef = await db
-        .collection("tournaments")
+        .collection('tournaments')
         .add(tournamentDetails);
       await db
-        .collection("tournament_player")
+        .collection('tournament_player')
         .doc(`${tournamentRef.id}_${currentUser.id}`)
         .set({ userId: currentUser.id, tournamentId: tournamentRef.id });
 
@@ -49,7 +49,7 @@ function NewTournamentScreen({ navigation }) {
       setLoading(false);
       showClipboardAlert(tournamentRef.id);
     } catch (error) {
-      console.error("Error creating tournament", error);
+      console.error('Error creating tournament', error);
     }
   };
 
@@ -60,13 +60,13 @@ function NewTournamentScreen({ navigation }) {
         <Spacer size={3} />
         <View style={styles.form}>
           <Input
-            label={"Tournament Name"}
+            label={'Tournament Name'}
             placeholder="Hacker's Classic"
-            onChangeText={text => handleChange("title", text)}
+            onChangeText={text => handleChange('title', text)}
             value={details.title}
           />
           <Spacer size={2} />
-          <Text>Optional customisations below:</Text>
+          {/* <Text>Optional customisations below:</Text>
           <Spacer size={2} />
           <Input
             label={"Winning Reward"}
@@ -77,10 +77,14 @@ function NewTournamentScreen({ navigation }) {
             label={"Losing Reward"}
             onChangeText={text => handleChange("losingReward", text)}
             value={details.losingReward}
-          />
+          /> */}
         </View>
 
-        <Button white loading={loading} onPress={handleSaveTournament}>
+        <Button
+          white
+          loading={loading}
+          disabled={title.length < 3}
+          onPress={handleSaveTournament}>
           CREATE TOURNAMENT
         </Button>
       </Card>
@@ -89,7 +93,7 @@ function NewTournamentScreen({ navigation }) {
 }
 
 NewTournamentScreen.navigationOptions = {
-  title: "New Tournament"
+  title: 'New Tournament'
 };
 
 export default NewTournamentScreen;
@@ -102,10 +106,10 @@ const styles = StyleSheet.create({
     backgroundColor: greySolitude,
     borderRadius: 15,
     height: 30,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginTop: 10,
     paddingLeft: 20,
     paddingRight: 20
