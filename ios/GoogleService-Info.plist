@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>992434344-f2b92f1k2qujfab7div5uku6ffojhjq0.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.992434344-f2b92f1k2qujfab7div5uku6ffojhjq0</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAfe31t6eTZOgrlXSLZ2131umXKX9n62H4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>992434344</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.ianlenehan.ParTown</string>
+	<key>PROJECT_ID</key>
+	<string>golf-classic</string>
+	<key>STORAGE_BUCKET</key>
+	<string>golf-classic.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:992434344:ios:fef5be3ee1b8cdefff4a9d</string>
+	<key>DATABASE_URL</key>
+	<string>https://golf-classic.firebaseio.com</string>
+</dict>
+</plist>
