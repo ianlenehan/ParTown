@@ -83,7 +83,7 @@ function NewTournamentScreen({ navigation }) {
         <Button
           white
           loading={loading}
-          disabled={title.length < 3}
+          disabled={details.title.length < 3}
           onPress={handleSaveTournament}>
           CREATE TOURNAMENT
         </Button>
