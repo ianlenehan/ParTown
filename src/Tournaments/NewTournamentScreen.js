@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, StyleSheet, Text, Clipboard, Alert } from 'react-native';
+import { View, StyleSheet, Clipboard, Alert } from 'react-native';
 import { firestore } from 'react-native-firebase';
 import { Button, Container, Card, H1, Input, Spacer } from '../common';
 import { greenMineral, greySolitude } from '../constants/Colours';

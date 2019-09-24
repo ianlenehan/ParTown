@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, ScrollView } from 'react-native';
+import { StyleSheet, View, ScrollView, RefreshControl } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { firestore } from 'react-native-firebase';
 import moment from 'moment';
@@ -24,8 +24,9 @@ import {
 
 const DashboardScreen = ({ navigation }) => {
   const { navigate } = navigation;
-  const { currentUser } = useAppContext();
+  const { currentUser, setAppState } = useAppContext();
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [tournaments, setTournaments] = useState([]);
 
   useEffect(() => {
@@ -64,8 +65,27 @@ const DashboardScreen = ({ navigation }) => {
       })
       .join(', ');
   };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchTournaments();
+    const db = firestore();
+
+    const currentUserSnap = await db
+      .collection('users')
+      .doc(currentUser.id)
+      .get();
+
+    const user = { id: currentUserSnap.id, ...currentUserSnap.data() };
+    setAppState('currentUser', user);
+    setRefreshing(false);
+  };
+
   return (
-    <ScrollContainer>
+    <ScrollContainer
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
       <View style={styles.headerClip} />
       <Card>
         <View style={styles.userCard}>

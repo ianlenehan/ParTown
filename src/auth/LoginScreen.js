@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Text, View, KeyboardAvoidingView, Image } from 'react-native';
+import { Text, View, Image } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 import { auth, firestore } from 'react-native-firebase';
 
 import {
@@ -124,103 +125,106 @@ function LoginScreen() {
 
   return (
     <Container solid>
-      <Spacer size={2} />
+      <KeyboardAwareScrollView>
+        <Spacer size={2} />
 
-      <Card flex={2} clear>
-        {authType === 'signup' && (
-          <React.Fragment>
-            <Input
-              white
-              label={'Full name'}
-              placeholder="Jack Nicklaus"
-              onChange={e => handleChange(e, 'fullName')}
-              value={fullName}
-              error={validationError}
-            />
-            <Spacer size={2} />
-            <Input
-              white
-              label={'Nickname'}
-              placeholder="Golden Bear"
-              onChange={e => handleChange(e, 'nickName')}
-              value={nickName}
-              error={validationError}
-            />
-            <Spacer size={2} />
-          </React.Fragment>
-        )}
-        <Input
-          white
-          label={'Email Address'}
-          placeholder="fore@example.com"
-          onChange={e => handleChange(e, 'emailAddress')}
-          value={emailAddress}
-          error={validationError}
-        />
-        <Spacer size={2} />
-        <Input
-          white
-          secureTextEntry
-          label={'Password'}
-          placeholder="s0m3thingS3cur3!"
-          onChange={e => handleChange(e, 'password')}
-          value={password}
-        />
-        <Spacer size={2} />
-        {authType === 'signup' ? (
-          <React.Fragment>
-            <Input
-              white
-              secureTextEntry
-              label={'Password Confirmation'}
-              placeholder="Same as the password..."
-              onChange={e => handleChange(e, 'passwordConfirmation')}
-              value={passwordConfirmation}
-            />
-            <Spacer size={2} />
-            <TouchableOpacity onPress={() => changeAuthType('login')}>
+        <Card flex={2} clear>
+          {authType === 'signup' && (
+            <React.Fragment>
+              <Input
+                white
+                label={'Full name'}
+                placeholder="Jack Nicklaus"
+                onChange={e => handleChange(e, 'fullName')}
+                value={fullName}
+                error={validationError}
+              />
+              <Spacer size={2} />
+              <Input
+                white
+                label={'Nickname'}
+                placeholder="Golden Bear"
+                onChange={e => handleChange(e, 'nickName')}
+                value={nickName}
+                error={validationError}
+              />
+              <Spacer size={2} />
+            </React.Fragment>
+          )}
+          <Input
+            white
+            label={'Email Address'}
+            placeholder="fore@example.com"
+            onChange={e => handleChange(e, 'emailAddress')}
+            value={emailAddress}
+            error={validationError}
+          />
+          <Spacer size={2} />
+          <Input
+            white
+            secureTextEntry
+            label={'Password'}
+            placeholder="s0m3thingS3cur3!"
+            onChange={e => handleChange(e, 'password')}
+            value={password}
+          />
+          <Spacer size={2} />
+          {authType === 'signup' ? (
+            <React.Fragment>
+              <Input
+                white
+                secureTextEntry
+                label={'Password Confirmation'}
+                placeholder="Same as the password..."
+                onChange={e => handleChange(e, 'passwordConfirmation')}
+                value={passwordConfirmation}
+              />
+              <Spacer size={2} />
+              <TouchableOpacity onPress={() => changeAuthType('login')}>
+                <Body white style={{ textAlign: 'center' }}>
+                  Already have an account? Click here to login.
+                </Body>
+              </TouchableOpacity>
+            </React.Fragment>
+          ) : (
+            <TouchableOpacity onPress={() => changeAuthType('signup')}>
               <Body white style={{ textAlign: 'center' }}>
-                Already have an account? Click here to login.
+                No Account? Click here to create one.
               </Body>
             </TouchableOpacity>
-          </React.Fragment>
-        ) : (
-          <TouchableOpacity onPress={() => changeAuthType('signup')}>
-            <Body white style={{ textAlign: 'center' }}>
-              No Account? Click here to create one.
-            </Body>
-          </TouchableOpacity>
-        )}
-        {errorMessage && (
-          <View
-            style={{
-              backgroundColor: Colors.greyWhiteSmoke,
-              padding: 5,
-              borderRadius: 5,
-              marginTop: 10
-            }}>
-            <Text style={{ color: 'red', textAlign: 'center' }}>
-              {errorMessage}
-            </Text>
-          </View>
-        )}
-        {authType === 'signup' ? (
-          <Button loading={loading} onPress={handleSignup}>
-            SIGN UP
-          </Button>
-        ) : (
-          <Button loading={loading} onPress={handleLogin}>
-            LOGIN
-          </Button>
-        )}
-      </Card>
-      <Spacer size={3} />
-      <View style={{ display: 'flex', alignItems: 'center', marginBottom: 50 }}>
-        <Image
-          source={require('../images/ParTownLogoWhite.png')}
-          style={{ width: 125, height: 50 }}
-        />
-      </View>
+          )}
+          {errorMessage && (
+            <View
+              style={{
+                backgroundColor: Colors.greyWhiteSmoke,
+                padding: 5,
+                borderRadius: 5,
+                marginTop: 10
+              }}>
+              <Text style={{ color: 'red', textAlign: 'center' }}>
+                {errorMessage}
+              </Text>
+            </View>
+          )}
+          {authType === 'signup' ? (
+            <Button loading={loading} onPress={handleSignup}>
+              SIGN UP
+            </Button>
+          ) : (
+            <Button loading={loading} onPress={handleLogin}>
+              LOGIN
+            </Button>
+          )}
+        </Card>
+        <Spacer size={3} />
+        <View
+          style={{ display: 'flex', alignItems: 'center', marginBottom: 50 }}>
+          <Image
+            source={require('../images/ParTownLogoWhite.png')}
+            style={{ width: 125, height: 50 }}
+          />
+        </View>
+      </KeyboardAwareScrollView>
     </Container>
   );
 }

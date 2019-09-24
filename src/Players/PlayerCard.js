@@ -13,7 +13,7 @@ function PlayerCard({ player }) {
             </Text>
             <Body>{player.fullName}</Body>
           </View>
-          <Emoji symbol={player.emoji || '⛳️'} size="large" />
+          <Emoji symbol={player.emoji} size="large" />
         </View>
       </TouchableWithoutFeedback>
     </Card>

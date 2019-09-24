@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, RefreshControl } from "react-native";
-import moment from "moment";
-import { firestore } from "react-native-firebase";
-import useAppContext from "../hooks/useAppContext";
-import { Body, Colors } from "../common";
+import React, { useEffect, useState } from 'react';
+import { View, Text, ScrollView, RefreshControl } from 'react-native';
+import moment from 'moment';
+import { firestore } from 'react-native-firebase';
+import useAppContext from '../hooks/useAppContext';
+import { Body, Colors, Loading } from '../common';
 
 const RoundsScreen = () => {
   const { tournament, roundScores, filterDates } = useAppContext();
   const [rounds, setRounds] = useState();
   const [refreshing, setRefreshing] = useState(false);
   const [players, setPlayers] = useState();
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     getRounds();
     getPlayers();
@@ -26,26 +28,29 @@ const RoundsScreen = () => {
   };
 
   const getRounds = async () => {
-    const db = firestore();
-    const query = db
-      .collection("rounds")
-      .where([
-        ["tournamentId", "==", tournament.id],
-        ["date", ">=", filterDates.from],
-        ["date", "<=", filterDates.to]
-      ]);
-    const res = await query.get();
-    const rounds = res.docs
-      .map(doc => {
-        return { ...doc.data(), id: doc.id };
-      })
-      .sort(function(a, b) {
-        a = a.date.toDate();
-        b = b.date.toDate();
-        return a > b ? -1 : a < b ? 1 : 0;
-      });
-
-    setRounds(rounds);
+    try {
+      setLoading(true);
+      const db = firestore();
+      const query = db
+        .collection('rounds')
+        .where('tournamentId', '==', tournament.id)
+        .where('date', '>=', new Date(filterDates.from))
+        .where('date', '<=', new Date(filterDates.to));
+      const res = await query.get();
+      const rounds = res.docs
+        .map(doc => {
+          return { ...doc.data(), id: doc.id };
+        })
+        .sort(function(a, b) {
+          a = a.date.toDate();
+          b = b.date.toDate();
+          return a > b ? -1 : a < b ? 1 : 0;
+        });
+      setRounds(rounds);
+      setLoading(false);
+    } catch (error) {
+      console.warn('Error getting rounds', error);
+    }
   };
 
   const onRefresh = async () => {
@@ -64,7 +69,7 @@ const RoundsScreen = () => {
           players.map(player => {
             return (
               <View key={player.id} style={styles.playersCellView}>
-                <Body bold style={{ textTransform: "uppercase" }}>
+                <Body bold style={{ textTransform: 'uppercase' }}>
                   {player.nickName}
                 </Body>
               </View>
@@ -79,8 +84,8 @@ const RoundsScreen = () => {
       return rounds.map(rd => {
         return (
           <View style={styles.dateCellView} key={rd.id}>
-            <Body bold>{moment(rd.date.toDate()).format("D MMM")}</Body>
-            <Body bold>{moment(rd.date.toDate()).format("YYYY")}</Body>
+            <Body bold>{moment(rd.date.toDate()).format('D MMM')}</Body>
+            <Body bold>{moment(rd.date.toDate()).format('YYYY')}</Body>
           </View>
         );
       });
@@ -97,7 +102,7 @@ const RoundsScreen = () => {
       return (
         <View style={style} key={item ? item.date : i}>
           <Body white={isWhite} bold={isBold}>
-            {item ? item.score : "-"}
+            {item ? item.score : '-'}
           </Body>
         </View>
       );
@@ -124,20 +129,30 @@ const RoundsScreen = () => {
     }
   };
 
+  if (loading) {
+    return <Loading size="large" />;
+  }
+
+  if (!loading && rounds && rounds.length < 1) {
+    return (
+      <Body style={{ textAlign: 'center', marginTop: 30 }}>
+        Looks like you haven't played any rounds between these dates!
+      </Body>
+    );
+  }
+
   return (
     <ScrollView
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
       style={styles.playersColumn}
-      contentContainerStyle={{ flex: 1 }}
-    >
+      contentContainerStyle={{ flex: 1 }}>
       <View style={styles.tableView}>
         {renderPlayersColumn()}
         <ScrollView
           horizontal
-          contentContainerStyle={{ flexDirection: "column" }}
-        >
+          contentContainerStyle={{ flexDirection: 'column' }}>
           <View style={styles.tableView}>{renderTableHead()}</View>
           <View style={styles.tableColumn}>{renderData()}</View>
         </ScrollView>
@@ -150,26 +165,26 @@ export default RoundsScreen;
 
 const styles = {
   tableView: {
-    flexDirection: "row"
+    flexDirection: 'row'
   },
   cellView: {
     padding: 15,
     marginBottom: 3,
     width: 60,
-    backgroundColor: "#fff",
-    justifyContent: "center",
-    alignItems: "center"
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   playersCellView: {
     padding: 15,
     marginBottom: 3,
-    backgroundColor: "#fff"
+    backgroundColor: '#fff'
   },
   dateCellView: {
     height: 60,
     width: 60,
-    justifyContent: "center",
-    alignItems: "center"
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   winnerCellView: {
     backgroundColor: Colors.championGold
@@ -178,6 +193,6 @@ const styles = {
     backgroundColor: Colors.redBurgundy
   },
   tableColumn: {
-    flexDirection: "column"
+    flexDirection: 'column'
   }
 };

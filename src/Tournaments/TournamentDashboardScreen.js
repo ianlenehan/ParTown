@@ -193,7 +193,7 @@ function TournamentDashboardScreen({ navigation }) {
         <View>
           <Spacer size={12} />
           <Body style={{ textAlign: 'center' }}>
-            Looks like you haven't played any rounds yet!
+            Looks like you haven't played any rounds between these dates!
           </Body>
         </View>
       ) : (

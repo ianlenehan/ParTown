@@ -99,7 +99,7 @@ function SettingsScreen({ navigation }) {
           onChangeText={handleNicknameChange}
         />
         <TouchableOpacity onPress={() => navigation.navigate('EmojiPicker')}>
-          <Emoji symbol={userDetails.emoji || '⛳️'} size="large" />
+          <Emoji symbol={userDetails.emoji} size="large" />
           <Body>Choose your emoji</Body>
         </TouchableOpacity>
         <View style={{ justifyContent: 'flex-end', flex: 1 }}>

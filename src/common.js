@@ -119,19 +119,20 @@ export const Container = props => {
   );
 };
 
-export const ScrollContainer = props => {
-  const backgroundColor = props.solid ? golfGreen : greyWhiteSmoke;
+export const ScrollContainer = ({ style, children, solid, ...props }) => {
+  const backgroundColor = solid ? golfGreen : greyWhiteSmoke;
   return (
     <ScrollView
+      {...props}
       style={{
         flexGrow: 1,
         backgroundColor,
         display: 'flex',
         padding: 10,
         paddingBottom: 50,
-        ...props.style
+        ...style
       }}>
-      {props.children}
+      {children}
     </ScrollView>
   );
 };
@@ -301,7 +302,7 @@ export const Emoji = ({ symbol, size, inactive, ...props }) => {
         opacity: inactive ? 0.2 : 1,
         ...props.style
       }}>
-      {symbol}
+      {symbol || '⛳️'}
     </Text>
   );
 };
