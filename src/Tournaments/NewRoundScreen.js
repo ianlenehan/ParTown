@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { View, DatePickerIOS, Picker, Alert } from "react-native";
-import { firestore } from "react-native-firebase";
-import useAppContext from "../hooks/useAppContext";
+import React, { useState } from 'react';
+import { View, DatePickerIOS, Picker, Alert } from 'react-native';
+import { firestore } from 'react-native-firebase';
+import useAppContext from '../hooks/useAppContext';
 import {
   H1,
   H3,
@@ -12,8 +12,15 @@ import {
   Spacer,
   Emoji,
   Colors
-} from "../common";
-import { TouchableOpacity } from "react-native-gesture-handler";
+} from '../common';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
+const initialRoundState = {
+  scores: {},
+  date: new Date(),
+  winner: {},
+  loser: {}
+};
 
 function ScorePicker({ playerId, setRoundDetails, roundDetails, inactive }) {
   const scoreSelections = Array.from(Array(60).keys());
@@ -29,8 +36,7 @@ function ScorePicker({ playerId, setRoundDetails, roundDetails, inactive }) {
           ...roundDetails,
           scores: { ...roundDetails.scores, [playerId]: itemValue }
         }));
-      }}
-    >
+      }}>
       {scoreSelections.map(value => (
         <Picker.Item label={value} value={value} key={value} />
       ))}
@@ -42,12 +48,7 @@ function NewRoundScreen({ navigation }) {
   const { tournament, refetch, currentUser, setAppState } = useAppContext();
   const [loading, setLoading] = useState(false);
   const [participants, setParticipants] = useState([]);
-  const [roundDetails, setRoundDetails] = useState({
-    scores: {},
-    date: new Date(),
-    winner: {},
-    loser: {}
-  });
+  const [roundDetails, setRoundDetails] = useState(initialRoundState);
   const { players } = tournament;
   const playerIds = Object.keys(players);
 
@@ -71,7 +72,7 @@ function NewRoundScreen({ navigation }) {
   };
 
   const setAwardee = (player, win) => {
-    const field = win ? "winner" : "loser";
+    const field = win ? 'winner' : 'loser';
     const awardee = player.id === roundDetails[field].id ? {} : player;
     setRoundDetails(roundDetails => ({
       ...roundDetails,
@@ -81,10 +82,10 @@ function NewRoundScreen({ navigation }) {
 
   const renderIcon = (player, win) => {
     if (!participants.includes(player.id)) return null;
-    let symbol = "🏆";
+    let symbol = '🏆';
     let idToCompare = roundDetails.winner.id;
     if (!win) {
-      symbol = "😤";
+      symbol = '😤';
       idToCompare = roundDetails.loser.id;
     }
     let style = styles.icon;
@@ -100,28 +101,34 @@ function NewRoundScreen({ navigation }) {
 
   const getCurrentUser = async () => {
     const currentUserSnap = await firestore()
-      .collection("users")
+      .collection('users')
       .doc(currentUser.id)
       .get();
 
-    setAppState("currentUser", {
+    setAppState('currentUser', {
       id: currentUserSnap.id,
       ...currentUserSnap.data()
     });
   };
 
+  const clearState = () => {
+    setRoundDetails(initialRoundState);
+    setParticipants([]);
+    setLoading(false);
+  };
+
   const handleRoundSubmit = async () => {
     if (!roundDetails.winner.id && !roundDetails.loser.id) {
       return Alert.alert(
-        "Wait",
-        "Please select a winner and loser by tapping on the emojis next to the relevant players."
+        'Wait',
+        'Please select a winner and loser by tapping on the emojis next to the relevant players.'
       );
     }
     try {
       setLoading(true);
       const db = firestore();
       const round = await db
-        .collection("rounds")
+        .collection('rounds')
         .add({ ...roundDetails, tournamentId: tournament.id });
 
       let tournamentUpdate = { lastRoundDate: roundDetails.date };
@@ -137,7 +144,7 @@ function NewRoundScreen({ navigation }) {
       }
 
       await db
-        .collection("tournaments")
+        .collection('tournaments')
         .doc(tournament.id)
         .update(tournamentUpdate);
 
@@ -154,29 +161,30 @@ function NewRoundScreen({ navigation }) {
       });
 
       roundScores.forEach(async rs => {
-        await db.collection("round_scores").add(rs);
+        await db.collection('round_scores').add(rs);
       });
+
       await refetch();
       await getCurrentUser();
-      navigation.navigate("Stats");
-      setLoading(false);
+      clearState();
+      navigation.navigate('Stats');
     } catch (error) {
-      console.error("Error adding you to the tournament", error);
+      console.error('Error adding you to the tournament', error);
     }
   };
 
   return (
     <ScrollContainer>
       <Card>
-        <H1 style={{ textAlign: "center" }}>Round Results</H1>
-        <H3 style={{ textAlign: "center" }}>{tournament.title}</H3>
+        <H1 style={{ textAlign: 'center' }}>Round Results</H1>
+        <H3 style={{ textAlign: 'center' }}>{tournament.title}</H3>
         <HR />
         <Spacer size={2} />
         <DatePickerIOS
           style={styles.pickerStyle}
           date={roundDetails.date}
           onDateChange={setDate}
-          mode={"date"}
+          mode={'date'}
         />
         <Spacer size={2} />
         {playerIds.map(id => (
@@ -185,11 +193,10 @@ function NewRoundScreen({ navigation }) {
             style={[
               styles.centeredRow,
               {
-                justifyContent: "space-between",
+                justifyContent: 'space-between',
                 padding: 5
               }
-            ]}
-          >
+            ]}>
             <View style={styles.centeredRow}>
               <TouchableOpacity onPress={() => toggleParticipant(id)}>
                 <Emoji
@@ -218,8 +225,7 @@ function NewRoundScreen({ navigation }) {
         <Button
           loading={loading}
           onPress={handleRoundSubmit}
-          disabled={Object.keys(roundDetails.scores).length < 1}
-        >
+          disabled={Object.keys(roundDetails.scores).length < 1}>
           Submit
         </Button>
       </Card>
@@ -230,22 +236,22 @@ function NewRoundScreen({ navigation }) {
 export default NewRoundScreen;
 
 NewRoundScreen.navigationOptions = () => ({
-  tabBarLabel: "New Round",
-  title: "New Round"
+  tabBarLabel: 'New Round',
+  title: 'New Round'
 });
 
 const styles = {
   pickerStyle: {
     height: 80,
-    overflow: "hidden",
-    justifyContent: "center",
+    overflow: 'hidden',
+    justifyContent: 'center',
     marginBottom: 10,
     marginTop: 10
   },
   centeredRow: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center"
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   icon: { marginRight: 5, opacity: 0.2 },
   selectedIcon: { marginRight: 5, opacity: 1 }
