@@ -23,6 +23,7 @@ function TournamentDashboardScreen({ navigation }) {
 
   const [stats, setStats] = useState({});
   const [loading, setLoading] = useState(false);
+  const [penalties, setPenalties] = useState();
 
   const { players, currentChampId, currentLoserId } = tournament;
   const playerIds = Object.keys(players);
@@ -35,15 +36,23 @@ function TournamentDashboardScreen({ navigation }) {
   const getStats = async () => {
     setLoading(true);
     const db = firestore();
-    const query = db
+    const scoresQuery = db
       .collection('round_scores')
       .where('tournamentId', '==', tournament.id)
       .where('date', '>=', new Date(filterDates.from))
       .where('date', '<=', new Date(filterDates.to));
-
-    const res = await query.get();
-    const roundScores = res.docs.map(doc => doc.data());
+    const scoresRes = await scoresQuery.get();
+    const roundScores = scoresRes.docs.map(doc => doc.data());
     setAppState('roundScores', roundScores);
+
+    const penaltyQuery = db
+      .collection('penalties')
+      .where('tournamentId', '==', tournament.id)
+      .where('date', '>=', new Date(filterDates.from))
+      .where('date', '<=', new Date(filterDates.to));
+    const penaltyRes = await penaltyQuery.get();
+    const penalties = penaltyRes.docs.map(doc => doc.data());
+    setPenalties(penalties);
 
     if (!roundScores || roundScores.length < 1) {
       setLoading(false);
@@ -52,8 +61,9 @@ function TournamentDashboardScreen({ navigation }) {
 
     const roundsPlayed = playerIds
       .map(playerId => {
+        const pens = penalties.filter(p => p.playerId === playerId).length;
         const num = roundScores.filter(s => s.playerId === playerId).length;
-        return { playerId, num };
+        return { playerId, num: num + pens };
       })
       .sort((a, b) => (a.num > b.num ? -1 : a.num < b.num ? 1 : 0));
 
@@ -67,9 +77,10 @@ function TournamentDashboardScreen({ navigation }) {
 
     const roundsLost = playerIds
       .map(playerId => {
+        const pens = penalties.filter(p => p.playerId === playerId).length;
         const num = roundScores.filter(s => s.playerId === playerId && s.loser)
           .length;
-        return { playerId, num };
+        return { playerId, num: num + pens };
       })
       .sort((a, b) => (a.num > b.num ? -1 : a.num < b.num ? 1 : 0));
 
@@ -224,6 +235,7 @@ function TournamentDashboardScreen({ navigation }) {
             title="Most Losses"
             stats={stats.mostLosses}
             totals={stats.roundsLost}
+            penalties={penalties}
             number={
               stats.mostLosses && stats.mostLosses[0] && stats.mostLosses[0].num
             }
@@ -233,6 +245,7 @@ function TournamentDashboardScreen({ navigation }) {
             title="Loss Averages"
             stats={stats.highestLossAvg}
             totals={stats.lossAverages}
+            penalties={penalties}
             number={
               stats.highestLossAvg &&
               stats.highestLossAvg[0] &&

@@ -24,7 +24,7 @@ export const Colors = {
   championGold: '#FFDF00'
 };
 
-export const Loading = ({ size, invert }) => {
+export const Loading = ({ size = 'large', invert }) => {
   return (
     <View
       style={{

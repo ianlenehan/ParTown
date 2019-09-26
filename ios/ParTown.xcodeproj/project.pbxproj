@@ -751,7 +751,7 @@
 			baseConfigurationReference = BC5E189594AA5F94D936D73B /* Pods-ParTown.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 92PDXG59PL;
 				INFOPLIST_FILE = ParTown/Info.plist;
@@ -773,7 +773,7 @@
 			baseConfigurationReference = 716D24635D3B70ADE87F1B2F /* Pods-ParTown.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = 92PDXG59PL;
 				INFOPLIST_FILE = ParTown/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
