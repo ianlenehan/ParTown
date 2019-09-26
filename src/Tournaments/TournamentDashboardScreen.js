@@ -204,7 +204,9 @@ function TournamentDashboardScreen({ navigation }) {
             title="Most Wins"
             stats={stats.mostWins}
             totals={stats.roundsWon}
-            number={stats.mostWins && stats.mostWins[0].num}
+            number={
+              stats.mostWins && stats.mostWins[0] && stats.mostWins[0].num
+            }
             players={players}
           />
           <StatCard
@@ -213,6 +215,7 @@ function TournamentDashboardScreen({ navigation }) {
             totals={stats.winAverages}
             number={
               stats.highestWinAvg &&
+              stats.highestWinAvg[0] &&
               numeral(stats.highestWinAvg[0].num).format('0%')
             }
             players={players}
@@ -221,14 +224,20 @@ function TournamentDashboardScreen({ navigation }) {
             title="Most Losses"
             stats={stats.mostLosses}
             totals={stats.roundsLost}
-            number={stats.mostLosses && stats.mostLosses[0].num}
+            number={
+              stats.mostLosses && stats.mostLosses[0] && stats.mostLosses[0].num
+            }
             players={players}
           />
           <StatCard
             title="Loss Averages"
             stats={stats.highestLossAvg}
             totals={stats.lossAverages}
-            number={stats.highestLossAvg && stats.highestLossAvg[0].num}
+            number={
+              stats.highestLossAvg &&
+              stats.highestLossAvg[0] &&
+              stats.highestLossAvg[0].num
+            }
             players={players}
           />
         </React.Fragment>
