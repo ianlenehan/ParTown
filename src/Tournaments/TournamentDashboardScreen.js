@@ -23,7 +23,7 @@ function TournamentDashboardScreen({ navigation }) {
 
   const [stats, setStats] = useState({});
   const [loading, setLoading] = useState(false);
-  const [penalties, setPenalties] = useState();
+  const [penalties, setPenalties] = useState([]);
 
   const { players, currentChampId, currentLoserId } = tournament;
   const playerIds = Object.keys(players);
@@ -61,9 +61,8 @@ function TournamentDashboardScreen({ navigation }) {
 
     const roundsPlayed = playerIds
       .map(playerId => {
-        const pens = penalties.filter(p => p.playerId === playerId).length;
         const num = roundScores.filter(s => s.playerId === playerId).length;
-        return { playerId, num: num + pens };
+        return { playerId, num };
       })
       .sort((a, b) => (a.num > b.num ? -1 : a.num < b.num ? 1 : 0));
 
@@ -77,16 +76,22 @@ function TournamentDashboardScreen({ navigation }) {
 
     const roundsLost = playerIds
       .map(playerId => {
-        const pens = penalties.filter(p => p.playerId === playerId).length;
+        const penaltyCount = penalties.filter(p => p.playerId === playerId)
+          .length;
         const num = roundScores.filter(s => s.playerId === playerId && s.loser)
           .length;
-        return { playerId, num: num + pens };
+        return { playerId, num: num + penaltyCount };
       })
       .sort((a, b) => (a.num > b.num ? -1 : a.num < b.num ? 1 : 0));
 
     const mostWins = getMostWins(roundsWon);
     const mostLosses = getMostLosses(roundsLost);
-    const averages = getAverages(roundsPlayed, roundsWon, roundsLost);
+    const averages = getAverages(
+      roundsPlayed,
+      roundsWon,
+      roundsLost,
+      penalties
+    );
     const winAverages = getWinAverages(averages);
     const lossAverages = getLossAverages(averages);
     const highestWinAvg = getHighestWinAvg(winAverages);
@@ -105,13 +110,14 @@ function TournamentDashboardScreen({ navigation }) {
     });
   };
 
-  const getAverages = (roundsPlayed, roundsWon, roundsLost) => {
+  const getAverages = (roundsPlayed, roundsWon, roundsLost, penalties) => {
     return playerIds.map(id => {
+      const penaltyCount = penalties.filter(p => p.playerId === id).length;
       const playedCount = roundsPlayed.find(r => r.playerId === id).num;
       const wonCount = roundsWon.find(r => r.playerId === id).num;
       const lostCount = roundsLost.find(r => r.playerId === id).num;
       const winAvg = wonCount / playedCount;
-      const lossAvg = lostCount / playedCount;
+      const lossAvg = lostCount / (playedCount + penaltyCount);
 
       return { playerId: id, winAvg, lossAvg };
     });

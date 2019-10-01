@@ -1,6 +1,6 @@
 import React from 'react';
 import useAppContext from '../hooks/useAppContext';
-import { View } from 'react-native';
+import { ScrollView } from 'react-native';
 import PlayerCard from './PlayerCard';
 
 function PlayersScreen() {
@@ -9,7 +9,7 @@ function PlayersScreen() {
   if (!players) return null;
 
   return (
-    <View>
+    <ScrollView>
       {Object.keys(players).map(playerId => (
         <PlayerCard
           key={players[playerId].nickName}
@@ -17,7 +17,7 @@ function PlayersScreen() {
           tournament={tournament}
         />
       ))}
-    </View>
+    </ScrollView>
   );
 }
 
