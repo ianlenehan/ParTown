@@ -131,22 +131,20 @@ function NewRoundScreen({ navigation }) {
         .collection('rounds')
         .add({ ...roundDetails, tournamentId: tournament.id });
 
-      let tournamentUpdate = { lastRoundDate: roundDetails.date };
       if (
-        roundDetails.date.toDate() > tournament.lastRoundDate.toDate() ||
-        !tournament.lastRoundDate
+        !tournament.lastRoundDate ||
+        roundDetails.date > tournament.lastRoundDate.toDate()
       ) {
-        tournamentUpdate = {
-          ...tournamentUpdate,
+        const tournamentUpdate = {
+          lastRoundDate: roundDetails.date,
           currentChampId: roundDetails.winner.id,
           currentLoserId: roundDetails.loser.id
         };
+        await db
+          .collection('tournaments')
+          .doc(tournament.id)
+          .update(tournamentUpdate);
       }
-
-      await db
-        .collection('tournaments')
-        .doc(tournament.id)
-        .update(tournamentUpdate);
 
       const roundScores = participants.map(p => {
         return {
