@@ -133,13 +133,13 @@ function NewRoundScreen({ navigation }) {
 
       let tournamentUpdate = { lastRoundDate: roundDetails.date };
       if (
-        roundDetails.date > tournament.lastRoundDate ||
+        roundDetails.date.toDate() > tournament.lastRoundDate.toDate() ||
         !tournament.lastRoundDate
       ) {
         tournamentUpdate = {
           ...tournamentUpdate,
-          currentChamp: roundDetails.winner.nickName,
-          currentLoser: roundDetails.loser.nickName
+          currentChampId: roundDetails.winner.id,
+          currentLoserId: roundDetails.loser.id
         };
       }
 

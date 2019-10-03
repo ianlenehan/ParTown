@@ -169,7 +169,7 @@ function TournamentDashboardScreen({ navigation }) {
   };
 
   if (loading) return <Loading size="large" />;
-
+  console.log({ currentChampId, currentLoserId });
   return (
     <ScrollContainer>
       <View
