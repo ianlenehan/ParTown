@@ -43,6 +43,16 @@ class App extends Component {
    * Listen for any auth state changes and update component state
    */
   async componentDidMount() {
+    this.setAuthListener();
+  }
+
+  componentWillUnmount() {
+    if (this.unsubscriber) this.unsubscriber();
+    this.onTokenRefreshListener();
+    this.messageListener();
+  }
+
+  setAuthListener() {
     this.unsubscriber = firebase.auth().onAuthStateChanged(async authUser => {
       let appState = {
         ...this.state.appState,
@@ -61,6 +71,7 @@ class App extends Component {
           ...currentUserSnap.data()
         };
         this.retrieveRegistrationToken(currentUser);
+        this.setNotificationsListeners();
         appState = {
           ...this.state.appState,
           authUser,
@@ -72,7 +83,9 @@ class App extends Component {
         loading: false
       });
     });
+  }
 
+  setNotificationsListeners = async () => {
     await this.requestMessagingPermission();
 
     this.onTokenRefreshListener = firebase
@@ -96,13 +109,7 @@ class App extends Component {
           console.log('go to it');
         }
       });
-  }
-
-  componentWillUnmount() {
-    if (this.unsubscriber) this.unsubscriber();
-    this.onTokenRefreshListener();
-    this.messageListener();
-  }
+  };
 
   updateSettingsInTournament = async (currentUser, fcmToken) => {
     const db = firebase.firestore();
