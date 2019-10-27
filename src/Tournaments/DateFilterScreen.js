@@ -1,20 +1,7 @@
-import React, { useState } from "react";
-import useAppContext from "../hooks/useAppContext";
-import { DatePickerIOS, View, Text } from "react-native";
-import {
-  H1,
-  H3,
-  Body,
-  Container,
-  HR,
-  Button,
-  Card,
-  ScrollContainer,
-  Spacer,
-  Input,
-  Emoji,
-  Colors
-} from "../common";
+import React, { useState } from 'react';
+import useAppContext from '../hooks/useAppContext';
+import { DatePickerIOS, View } from 'react-native';
+import { H1, Body, Container, Button, Spacer } from '../common';
 
 function DateFilterScreen({ navigation }) {
   const { filterDates, setAppState } = useAppContext();
@@ -33,22 +20,22 @@ function DateFilterScreen({ navigation }) {
   };
 
   const saveDates = () => {
-    setAppState("filterDates", dates);
+    setAppState('filterDates', dates);
     exitModal();
   };
 
   return (
     <Container>
       <View style={{ marginTop: 50, flex: 1 }}>
-        <H1 style={{ textAlign: "center" }}>Set Date Filter</H1>
+        <H1 style={{ textAlign: 'center' }}>Set Date Filter</H1>
         <Spacer size={2} />
         <Body>From:</Body>
         <Spacer size={2} />
         <DatePickerIOS
           style={styles.pickerStyle}
           date={dates.from}
-          onDateChange={value => setDate("from", value)}
-          mode={"date"}
+          onDateChange={value => setDate('from', value)}
+          mode={'date'}
         />
         <Spacer size={4} />
         <Body>To:</Body>
@@ -56,8 +43,8 @@ function DateFilterScreen({ navigation }) {
         <DatePickerIOS
           style={styles.pickerStyle}
           date={dates.to}
-          onDateChange={value => setDate("to", value)}
-          mode={"date"}
+          onDateChange={value => setDate('to', value)}
+          mode={'date'}
         />
       </View>
       <Button onPress={saveDates}>Save</Button>
@@ -73,8 +60,8 @@ export default DateFilterScreen;
 const styles = {
   pickerStyle: {
     height: 80,
-    overflow: "hidden",
-    justifyContent: "center",
+    overflow: 'hidden',
+    justifyContent: 'center',
     marginBottom: 10,
     marginTop: 10
   }

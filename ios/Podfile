@@ -6,6 +6,7 @@ target 'ParTown' do
   pod 'Firebase/Core', '~> 6.2.0'
   pod 'Firebase/Firestore', '~> 6.2.0'
   pod 'Firebase/Auth', '~> 6.2.0'
+  pod 'Firebase/Messaging', '~> 6.2.0'
 
   pod 'React', :path => '../node_modules/react-native/'
   pod 'React-Core', :path => '../node_modules/react-native/React'

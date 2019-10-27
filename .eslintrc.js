@@ -4,8 +4,8 @@ module.exports = {
   plugins: ['react-hooks'],
   rules: {
     'object-curly-spacing': [2, 'always'],
-    curly: ['error', 'multi'],
-    'comma-dangle': '0',
+    curly: ["error", "multi-line"],
+    'comma-dangle': 0,
     'react-hooks/exhaustive-deps': 'warn'
   }
 };

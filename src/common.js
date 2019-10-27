@@ -151,11 +151,15 @@ export const Button = props => {
     secondaryColor = 'white';
   }
   let onClick = props.onClick;
-  if (props.loading) onClick = null;
+  if (props.loading) {
+    onClick = null;
+  }
 
   return (
     <TouchableOpacity
       style={{
+        height: 45,
+        justifyContent: 'center',
         padding: 10,
         margin: 5,
         borderColor: secondaryColor,

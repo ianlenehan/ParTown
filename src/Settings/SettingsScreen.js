@@ -4,7 +4,6 @@ import useAppContext from '../hooks/useAppContext';
 import { View, TouchableOpacity } from 'react-native';
 import {
   H1,
-  H3,
   Body,
   Button,
   Card,
@@ -32,7 +31,7 @@ function SettingsScreen({ navigation }) {
     }
   }, [emoji, currentUser]);
 
-  updatePlayerSettings = async () => {
+  const updatePlayerSettings = async () => {
     setLoading(true);
     setAppState('currentUser', userDetails);
     try {
@@ -48,7 +47,7 @@ function SettingsScreen({ navigation }) {
     }
   };
 
-  updateSettingsInTournament = async userDetails => {
+  const updateSettingsInTournament = async userDetails => {
     const { refetch } = navigation.state.params;
     const db = firestore();
 
@@ -66,16 +65,12 @@ function SettingsScreen({ navigation }) {
     refetch();
   };
 
-  handleNameChange = text => {
+  const handleNameChange = text => {
     setUserDetails(userDetails => ({ ...userDetails, fullName: text }));
   };
 
-  handleNicknameChange = text => {
+  const handleNicknameChange = text => {
     setUserDetails(userDetails => ({ ...userDetails, nickName: text }));
-  };
-
-  handleEmojiChange = text => {
-    setUserDetails(userDetails => ({ ...userDetails, emoji: text }));
   };
 
   const handleSignOut = async () => {

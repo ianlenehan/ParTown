@@ -1,13 +1,14 @@
 import React from 'react';
-import {Image} from 'react-native';
-import {createStackNavigator} from 'react-navigation-stack';
-import {createBottomTabNavigator} from 'react-navigation-tabs';
+import { Image } from 'react-native';
+import { createStackNavigator } from 'react-navigation-stack';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {golfGreen} from '../constants/Colours';
+import { golfGreen } from '../constants/Colours';
 import DashboardScreen from '../Dashboard/DashboardScreen';
 import NewTournamentScreen from '../Tournaments/NewTournamentScreen';
 import TournamentDashboardScreen from '../Tournaments/TournamentDashboardScreen';
 import FindTournamentScreen from '../Tournaments/FindTournamentScreen';
+import AvailabilityScreen from '../Tournaments/AvailabilityScreen';
 import NewRoundScreen from '../Tournaments/NewRoundScreen';
 import RoundsScreen from '../Tournaments/RoundsScreen';
 import DateFilterScreen from '../Tournaments/DateFilterScreen';
@@ -19,7 +20,7 @@ const LogoTitle = () => {
   return (
     <Image
       source={require('../images/ParTownLogoWhite.png')}
-      style={{width: 80, height: 30}}
+      style={{ width: 80, height: 30 }}
     />
   );
 };
@@ -29,14 +30,14 @@ const defaultNavigationOptions = {
     backgroundColor: golfGreen,
     elevation: 0,
     shadowOpacity: 0,
-    borderBottomWidth: 0,
+    borderBottomWidth: 0
   },
   headerTintColor: '#fff',
   headerTitleStyle: {
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
   headerBackTitle: 'Dashboard',
-  headerTitle: <LogoTitle />,
+  headerTitle: <LogoTitle />
 };
 
 const TournamentTabNavigator = createBottomTabNavigator(
@@ -44,12 +45,13 @@ const TournamentTabNavigator = createBottomTabNavigator(
     Stats: TournamentDashboardScreen,
     NewRound: NewRoundScreen,
     Rounds: RoundsScreen,
-    Players: PlayersScreen,
+    Availability: AvailabilityScreen,
+    Players: PlayersScreen
   },
   {
-    defaultNavigationOptions: ({navigation}) => ({
-      tabBarIcon: ({focused, horizontal, tintColor}) => {
-        const {routeName} = navigation.state;
+    defaultNavigationOptions: ({ navigation }) => ({
+      tabBarIcon: ({ focused, horizontal, tintColor }) => {
+        const { routeName } = navigation.state;
         let IconComponent = Ionicons;
         let iconName;
         if (routeName === 'Stats') {
@@ -60,18 +62,20 @@ const TournamentTabNavigator = createBottomTabNavigator(
           iconName = 'ios-add-circle';
         } else if (routeName === 'Rounds') {
           iconName = 'ios-list-box';
+        } else if (routeName === 'Availability') {
+          iconName = 'ios-calendar';
         }
 
         // You can return any component that you like here!
         return <IconComponent name={iconName} size={25} color={tintColor} />;
       },
-      ...defaultNavigationOptions,
+      ...defaultNavigationOptions
     }),
     tabBarOptions: {
       activeTintColor: golfGreen,
-      inactiveTintColor: 'gray',
-    },
-  },
+      inactiveTintColor: 'gray'
+    }
+  }
 );
 
 const MainStackNavigator = createStackNavigator(
@@ -79,29 +83,29 @@ const MainStackNavigator = createStackNavigator(
     Dashboard: DashboardScreen,
     NewTournament: NewTournamentScreen,
     TournamentDash: TournamentTabNavigator,
-    Settings: SettingsScreen,
+    Settings: SettingsScreen
   },
   {
-    defaultNavigationOptions,
+    defaultNavigationOptions
   },
   {
-    initialRouteName: 'Dashboard',
-  },
+    initialRouteName: 'Dashboard'
+  }
 );
 
 const RootStackNavigator = createStackNavigator(
   {
     Main: {
-      screen: MainStackNavigator,
+      screen: MainStackNavigator
     },
     EmojiPicker: EmojiPickerScreen,
     FindTournament: FindTournamentScreen,
-    DateFilter: DateFilterScreen,
+    DateFilter: DateFilterScreen
   },
   {
     mode: 'modal',
-    headerMode: 'none',
-  },
+    headerMode: 'none'
+  }
 );
 
 export default RootStackNavigator;
